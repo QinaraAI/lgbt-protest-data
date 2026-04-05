@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visible, Vulnerable, Resisting — India LGBT Events 2016–2021</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #f9f7f4;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 3rem 1rem 5rem;
+    }
+
+    .wrap {
+      font-family: 'IBM Plex Mono', monospace;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .headline {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 0.4rem;
+      color: #1a1a1a;
+    }
+
+    .subhead {
+      font-size: 11px;
+      color: #888;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      border-bottom: 0.5px solid #ddd;
+      padding-bottom: 1rem;
+    }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin: 2.5rem 0 0.75rem;
+    }
+
+    .annotation {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      padding-left: 0.75rem;
+      border-left: 2px solid #ddd;
+    }
+
+    .timeline { display: flex; flex-direction: column; gap: 6px; margin-bottom: 0.5rem; }
+
+    .year-row { display: flex; align-items: center; gap: 10px; }
+
+    .yr-label {
+      font-size: 11px;
+      width: 36px;
+      flex-shrink: 0;
+      color: #888;
+    }
+
+    .bar-group { display: flex; gap: 2px; flex: 1; }
+
+    .bar-seg {
+      height: 22px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .bar-seg:hover { opacity: 0.7; }
+
+    .bar-protest  { background: #5DCAA5; }
+    .bar-riot     { background: #EF9F27; }
+    .bar-violence { background: #E24B4A; }
+    .bar-other    { background: #B4B2A9; }
+
+    .yr-total { font-size: 10px; color: #bbb; width: 24px; }
+
+    .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 1rem; }
+    .leg-item { display: flex; align-items: center; gap: 6px; font-size: 10px; color: #888; }
+    .leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+    .state-grid { display: flex; flex-direction: column; gap: 5px; }
+
+    .state-row { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .state-row:hover .state-bar { opacity: 0.7; }
+
+    .state-name {
+      font-size: 10px;
+      width: 130px;
+      flex-shrink: 0;
+      color: #888;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .state-bar-wrap { flex: 1; display: flex; gap: 2px; }
+
+    .state-bar {
+      height: 16px;
+      border-radius: 2px;
+      transition: opacity 0.15s;
+    }
+
+    .state-count { font-size: 10px; color: #bbb; width: 20px; }
+
+    .ratio-grid { display: flex; flex-direction: column; gap: 8px; }
+
+    .ratio-row { display: flex; align-items: center; gap: 10px; }
+
+    .ratio-label { font-size: 10px; width: 36px; color: #888; }
+
+    .ratio-track {
+      flex: 1;
+      height: 6px;
+      background: #eee;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .ratio-fill {
+      height: 100%;
+      background: #E24B4A;
+      border-radius: 3px;
+    }
+
+    .ratio-pct { font-size: 10px; color: #bbb; width: 32px; text-align: right; }
+
+    .tip {
+      position: fixed;
+      background: #fff;
+      border: 0.5px solid #ccc;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      line-height: 1.5;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.1s;
+      max-width: 220px;
+      z-index: 100;
+      color: #1a1a1a;
+    }
+    .tip.show { opacity: 1; }
+
+    .big-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stat-row { display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
+
+    .stat-label {
+      font-size: 10px;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 4px;
+    }
+
+    .callout {
+      background: #f0ede8;
+      border-radius: 6px;
+      padding: 1rem;
+      font-size: 11px;
+      line-height: 1.7;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+    .callout strong { color: #1a1a1a; font-weight: 500; }
+
+    .dot-grid { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 1rem; }
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .dot:hover { transform: scale(1.5); }
+
+    .footer {
+      font-size: 10px;
+      color: #bbb;
+      margin-top: 2rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="headline">Visible, Vulnerable, Resisting</div>
+  <div class="subhead">LGBT protest events in India &nbsp;·&nbsp; 2016–2021 &nbsp;·&nbsp; ACLED data</div>
+
+  <div class="stat-row">
+    <div class="stat-block">
+      <div class="big-num">89</div>
+      <div class="stat-label">total events</div>
+    </div>
+    <div class="stat-block">
+      <div class="big-num">58</div>
+      <div class="stat-label">protests</div>
+    </div>
+    <div class="stat-block">
+      <div class="big-num" style="color:#E24B4A">30</div>
+      <div class="stat-label">riots or violence</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    One in three recorded events was not a protest but an act of violence or a riot. For every march, there was, on average, half an attack. This dataset only captures what made the news.
+  </div>
+
+  <div class="section-label">What kind of event, by year</div>
+
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot" style="background:#5DCAA5"></div>Peaceful protest</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#EF9F27"></div>Riot / mob violence</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#E24B4A"></div>Violence against civilians</div>
+  </div>
+
+  <div class="annotation">
+    2018–19 saw the largest spike in protests — coinciding with nationwide demonstrations against the Transgender Persons (Protection of Rights) Bill, which activists criticised for failing to protect the communities it claimed to serve.
+  </div>
+
+  <div class="timeline" id="timeline"></div>
+
+  <div class="section-label" style="margin-top:2.5rem">Violence as share of all events, per year</div>
+  <div class="annotation">In 2020, nearly half of all recorded events were violent — as Covid lockdowns created conditions of extreme vulnerability for transgender communities with no income or housing protection.</div>
+  <div class="ratio-grid" id="ratio-grid"></div>
+
+  <div class="section-label" style="margin-top:2.5rem">Where events were concentrated</div>
+  <div class="annotation">Maharashtra, Kerala, and Delhi recorded the most events. Kerala's high count reflects both an active trans rights movement and documented police harassment. Jammu & Kashmir appears disproportionately — almost entirely as protests against police inaction.</div>
+  <div class="state-grid" id="state-grid"></div>
+
+  <div class="section-label" style="margin-top:2.5rem">Every event as a dot</div>
+  <div class="annotation">Each dot is one recorded event. Hover to see what it was. Colour shows type.</div>
+  <div class="dot-grid" id="dot-grid"></div>
+
+  <div class="footer">
+    Source: ACLED (Armed Conflict Location &amp; Event Data Project), India LGBT entries 2016–2021. Events are those where LGBT communities were a recorded actor. Undercounting is likely; many incidents go unreported or were not covered by national press.
+  </div>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<script>
+const data = {
+  byYear: {
+    '2016': {Protests:5, Riots:0, Violence:0},
+    '2017': {Protests:4, Riots:2, Violence:1},
+    '2018': {Protests:15, Riots:2, Violence:5},
+    '2019': {Protests:14, Riots:6, Violence:3},
+    '2020': {Protests:7, Riots:6, Violence:1},
+    '2021': {Protests:13, Riots:2, Violence:2},
+  },
+  byState: [
+    ['Maharashtra', {Protests:5, Riots:3, Violence:2}],
+    ['Kerala',      {Protests:6, Riots:1, Violence:2}],
+    ['Delhi',       {Protests:8, Riots:0, Violence:1}],
+    ['Jammu & Kashmir', {Protests:5, Riots:1, Violence:0}],
+    ['Assam',       {Protests:3, Riots:2, Violence:1}],
+    ['Telangana',   {Protests:3, Riots:0, Violence:3}],
+    ['Karnataka',   {Protests:4, Riots:1, Violence:0}],
+    ['West Bengal', {Protests:3, Riots:1, Violence:1}],
+    ['Tamil Nadu',  {Protests:4, Riots:0, Violence:1}],
+    ['Andhra Pradesh', {Protests:2, Riots:1, Violence:1}],
+    ['Uttar Pradesh',  {Protests:3, Riots:2, Violence:0}],
+    ['Rajasthan',   {Protests:2, Riots:1, Violence:1}],
+  ],
+  events: [
+    {y:'2021',t:'Protests',s:'Karnataka',n:'5000+ marched in Bengaluru, 14th edition of pride march'},
+    {y:'2021',t:'Protests',s:'J&K',n:'Trans community protests attack in Jammu'},
+    {y:'2021',t:'Protests',s:'West Bengal',n:'200 trans persons protest outside police station'},
+    {y:'2021',t:'Protests',s:'Andhra Pradesh',n:'Trans women demand action against perpetrators'},
+    {y:'2021',t:'Riots',s:'Andhra Pradesh',n:'Two groups of trans women clash in Anantapur'},
+    {y:'2021',t:'Protests',s:'Kerala',n:'Trans community protest outside Kochi hospital'},
+    {y:'2021',t:'Violence',s:'West Bengal',n:'Transgender person shot and killed in North Dum Dum'},
+    {y:'2021',t:'Protests',s:'Maharashtra',n:'Trans persons protest in Borivali, Mumbai'},
+    {y:'2021',t:'Riots',s:'Uttar Pradesh',n:"Mob attacks woman's girlfriend in Aligarh"},
+    {y:'2021',t:'Protests',s:'Kerala',n:'Trans community protest outside hospital, Kochi'},
+    {y:'2021',t:'Protests',s:'Bihar',n:'Trans community protest outside police station'},
+    {y:'2021',t:'Protests',s:'Bihar',n:'Trans persons protest in Mirganj'},
+    {y:'2021',t:'Protests',s:'J&K',n:'Trans community protests alleged attack in Jammu'},
+    {y:'2021',t:'Violence',s:'Maharashtra',n:'Transgender person killed in Goregaon West'},
+    {y:'2021',t:'Protests',s:'J&K',n:'Police stop trans persons marching to secretariat'},
+    {y:'2021',t:'Protests',s:'J&K',n:'Trans people protest police inaction, Jammu'},
+    {y:'2021',t:'Protests',s:'J&K',n:'Trans persons protest abduction and assault, Jammu'},
+    {y:'2020',t:'Protests',s:'Kerala',n:'Protest against police harassment of trans people, Thrissur'},
+    {y:'2020',t:'Riots',s:'Maharashtra',n:'4 men attack and beat transgender person, Pune'},
+    {y:'2020',t:'Riots',s:'Gujarat',n:'Trans groups clash in Navsari'},
+    {y:'2020',t:'Riots',s:'Rajasthan',n:'Two trans groups clash over collections territory, Ajmer'},
+    {y:'2020',t:'Riots',s:'Assam',n:'Two trans communities clash in Guwahati'},
+    {y:'2020',t:'Protests',s:'West Bengal',n:'Trans community demonstration near New Jalpaiguri'},
+    {y:'2020',t:'Riots',s:'Assam',n:'Group attacks 6 transgender persons in Guwahati'},
+    {y:'2020',t:'Protests',s:'Maharashtra',n:'15 trans people disrobe and protest outside police station, Dharavi'},
+    {y:'2020',t:'Violence',s:'Haryana',n:'3 men shoot at group of transgender people in Gurgaon'},
+    {y:'2020',t:'Riots',s:'Punjab',n:'Trans people pelt stones at police in Ludhiana'},
+    {y:'2020',t:'Protests',s:'Karnataka',n:'Trans community and women protest in Bengaluru'},
+    {y:'2020',t:'Protests',s:'Uttar Pradesh',n:'Trans community solidarity protest in Lucknow'},
+    {y:'2020',t:'Protests',s:'Assam',n:'LGBTQ Pride march in Guwahati'},
+    {y:'2020',t:'Protests',s:'Delhi',n:'LGBT community march from Mandi House to Jantar Mantar'},
+    {y:'2019',t:'Protests',s:'West Bengal',n:'20,000 students and LGBTQIA+ activists march, Kolkata'},
+    {y:'2019',t:'Protests',s:'Delhi',n:'Street vendors and trans community protest, Chandigarh'},
+    {y:'2019',t:'Protests',s:'Tamil Nadu',n:'Trans community and allies protest, Chennai'},
+    {y:'2019',t:'Protests',s:'Maharashtra',n:'LGBT community protest, Dadar Mumbai'},
+    {y:'2019',t:'Protests',s:'Maharashtra',n:'Trans community members and rights activists protest, Mumbai'},
+    {y:'2019',t:'Protests',s:'Delhi',n:'Delhi Pride — protests against trans rights bill'},
+    {y:'2019',t:'Riots',s:'Uttarakhand',n:'Two rival Kinnar community groups clash, Roorkee'},
+    {y:'2019',t:'Riots',s:'Uttar Pradesh',n:'LGBT person beaten by mob over alleged indecency, Kannauj'},
+    {y:'2019',t:'Riots',s:'Uttar Pradesh',n:'LGBT persons pelt stones at train passengers, Agra'},
+    {y:'2019',t:'Riots',s:'Punjab',n:'Police cane-charge two trans groups, Meerut'},
+    {y:'2019',t:'Protests',s:'Delhi',n:'LGBT members and students protest at Ambedkar University'},
+    {y:'2019',t:'Violence',s:'Rajasthan',n:'Transgender person beaten by mob in Udaipur'},
+    {y:'2019',t:'Riots',s:'Kerala',n:'Group of youths attack two trans persons, Kakkanad'},
+    {y:'2019',t:'Riots',s:'Andhra Pradesh',n:'10 persons attack trans persons seeking alms, Vijayawada'},
+    {y:'2019',t:'Protests',s:'Karnataka',n:'25 organisations protest in Bengaluru'},
+    {y:'2019',t:'Protests',s:'Kerala',n:'Trans rights activists candlelight protest, Kozhikode'},
+    {y:'2019',t:'Protests',s:'Telangana',n:'Hyderabad Queer Swabhimana Yatra (7th edition)'},
+    {y:'2019',t:'Violence',s:'Tamil Nadu',n:'Intersex activist assaulted by unidentified actors, Coimbatore'},
+    {y:'2019',t:'Protests',s:'Odisha',n:'Trans community protest against state govt, Bhubaneswar'},
+    {y:'2019',t:'Violence',s:'Telangana',n:'Transgender person and sex worker attacked, Mahabubnagar'},
+    {y:'2019',t:'Protests',s:'Delhi',n:'Trans students and allies rally at Ambedkar University'},
+    {y:'2019',t:'Protests',s:'Maharashtra',n:'Trans community protest against Transgender Persons Bill, Mumbai'},
+    {y:'2018',t:'Protests',s:'Karnataka',n:'Trans community protest in Hubballi'},
+    {y:'2018',t:'Riots',s:'Assam',n:'Youth assaulted for posing as transgender, Guwahati'},
+    {y:'2018',t:'Protests',s:'Assam',n:'Trans community and civil rights groups protest, Guwahati'},
+    {y:'2018',t:'Protests',s:'Delhi',n:'Trans activists protest against Transgender Bill at Jantar Mantar'},
+    {y:'2018',t:'Protests',s:'Karnataka',n:'Trans community protest in Mandya'},
+    {y:'2018',t:'Protests',s:'Maharashtra',n:'Trans community protest in Azad Maidan, Mumbai'},
+    {y:'2018',t:'Protests',s:'Tamil Nadu',n:'Trans activists protest against Transgender Bill, Chennai'},
+    {y:'2018',t:'Protests',s:'Telangana',n:"Women's and trans rights group protest, Hyderabad"},
+    {y:'2018',t:'Protests',s:'Andhra Pradesh',n:'Trans activists protest demanding welfare measures, Visakhapatnam'},
+    {y:'2018',t:'Violence',s:'Telangana',n:'Transgender candidate for assembly elections goes missing'},
+    {y:'2018',t:'Violence',s:'Punjab',n:'Group including trans persons sexually assaulted, Amritsar'},
+    {y:'2018',t:'Riots',s:'Maharashtra',n:'Mob attacks three trans persons, Bhayandar'},
+    {y:'2018',t:'Violence',s:'West Bengal',n:'LGBTQ activist slapped by policeman, Kolkata'},
+    {y:'2018',t:'Protests',s:'Chandigarh',n:'Protest after trans persons harassed, Chandigarh'},
+    {y:'2018',t:'Protests',s:'Telangana',n:'Trans persons from Hyderabad protest'},
+    {y:'2018',t:'Protests',s:'Punjab',n:'Residents and trans community protest in Mullanpur'},
+    {y:'2018',t:'Violence',s:'Maharashtra',n:'MNS workers attack transgender person, Ghatkopar'},
+    {y:'2018',t:'Protests',s:'Tamil Nadu',n:'Trans community protest in Coimbatore'},
+    {y:'2018',t:'Protests',s:'Uttarakhand',n:'Trans community protest in Dehradun'},
+    {y:'2018',t:'Violence',s:'Kerala',n:'Unidentified actors attack two trans persons, Thiruvananthapuram'},
+    {y:'2018',t:'Protests',s:'Assam',n:'March by All Assam Transgenders Association, Guwahati'},
+    {y:'2018',t:'Protests',s:'Delhi',n:'~30 transgender persons assemble at Press Club, Delhi'},
+    {y:'2017',t:'Protests',s:'Kerala',n:'LGBTQI community protest, Thiruvananthapuram'},
+    {y:'2017',t:'Protests',s:'Delhi',n:'Trans and intersex people from across India protest, Delhi'},
+    {y:'2017',t:'Protests',s:'Manipur',n:'Women and trans activists sit-in protest, Imphal'},
+    {y:'2017',t:'Riots',s:'J&K',n:'Mob assaults trans woman wearing burqa, Awantipora'},
+    {y:'2017',t:'Riots',s:'Odisha',n:'Clash between two trans groups during procession, Bhubaneswar'},
+    {y:'2017',t:'Violence',s:'Telangana',n:'Army personnel misbehave and assault trans person, Hyderabad'},
+    {y:'2017',t:'Other',s:'Kerala',n:'Police arrest 15+ trans community members following incident, Kochi'},
+    {y:'2017',t:'Protests',s:'Gujarat',n:'#IWillGoOut campaign protest march, Ahmedabad'},
+    {y:'2016',t:'Protests',s:'Tamil Nadu',n:'Police lathicharge trans protesters near City, Chennai'},
+    {y:'2016',t:'Protests',s:'Rajasthan',n:'Dalit Mahila Swabhimaan Yatra, includes LGBT groups'},
+    {y:'2016',t:'Protests',s:'Kerala',n:'LGBTQ community protest under Marvels banner, Kochi'},
+    {y:'2016',t:'Protests',s:'Haryana',n:'LGBT candlelight march, Gurgaon'},
+    {y:'2016',t:'Protests',s:'Delhi',n:'35 LGBT persons silent candlelit tribute, Orlando victims'},
+  ]
+};
+
+const tip = document.getElementById('tip');
+
+function showTip(e, html) {
+  tip.innerHTML = html;
+  tip.classList.add('show');
+  moveTip(e);
+}
+function moveTip(e) {
+  tip.style.left = Math.min(e.clientX + 14, window.innerWidth - 240) + 'px';
+  tip.style.top = Math.max(e.clientY - 70, 8) + 'px';
+}
+function hideTip() { tip.classList.remove('show'); }
+
+document.addEventListener('mousemove', e => {
+  if (tip.classList.contains('show')) moveTip(e);
+});
+
+// TIMELINE
+const tl = document.getElementById('timeline');
+Object.entries(data.byYear).forEach(([yr, v]) => {
+  const total = v.Protests + v.Riots + v.Violence;
+  const row = document.createElement('div');
+  row.className = 'year-row';
+
+  const label = document.createElement('div');
+  label.className = 'yr-label';
+  label.textContent = yr;
+
+  const group = document.createElement('div');
+  group.className = 'bar-group';
+
+  [
+    {key:'Protests', cls:'bar-protest', label:'Peaceful protests'},
+    {key:'Riots',    cls:'bar-riot',    label:'Riots / mob violence'},
+    {key:'Violence', cls:'bar-violence',label:'Violence against civilians'},
+  ].forEach(({key, cls, label}) => {
+    if (!v[key]) return;
+    const seg = document.createElement('div');
+    seg.className = `bar-seg ${cls}`;
+    seg.style.width = (v[key] * 24) + 'px';
+    seg.addEventListener('mousemove', e => showTip(e, `<strong>${yr}</strong><br>${label}<br><strong>${v[key]}</strong> events`));
+    seg.addEventListener('mouseleave', hideTip);
+    group.appendChild(seg);
+  });
+
+  const cnt = document.createElement('div');
+  cnt.className = 'yr-total';
+  cnt.textContent = total;
+
+  row.appendChild(label);
+  row.appendChild(group);
+  row.appendChild(cnt);
+  tl.appendChild(row);
+});
+
+// RATIO GRID
+const rg = document.getElementById('ratio-grid');
+Object.entries(data.byYear).forEach(([yr, v]) => {
+  const total = v.Protests + v.Riots + v.Violence;
+  const violent = v.Riots + v.Violence;
+  const pct = Math.round((violent / total) * 100);
+
+  const row = document.createElement('div');
+  row.className = 'ratio-row';
+  row.innerHTML = `
+    <div class="ratio-label">${yr}</div>
+    <div class="ratio-track"><div class="ratio-fill" style="width:${pct}%"></div></div>
+    <div class="ratio-pct">${pct}%</div>
+  `;
+  rg.appendChild(row);
+});
+
+// STATE GRID
+const sg = document.getElementById('state-grid');
+const maxState = Math.max(...data.byState.map(([,v]) => v.Protests + v.Riots + v.Violence));
+
+data.byState.forEach(([state, v]) => {
+  const total = v.Protests + v.Riots + v.Violence;
+  const row = document.createElement('div');
+  row.className = 'state-row';
+
+  const name = document.createElement('div');
+  name.className = 'state-name';
+  name.textContent = state;
+
+  const barWrap = document.createElement('div');
+  barWrap.className = 'state-bar-wrap';
+
+  [['Protests','#5DCAA5'],['Riots','#EF9F27'],['Violence','#E24B4A']].forEach(([key, col]) => {
+    if (!v[key]) return;
+    const b = document.createElement('div');
+    b.className = 'state-bar';
+    b.style.background = col;
+    b.style.width = (v[key] / maxState * 200) + 'px';
+    barWrap.appendChild(b);
+  });
+
+  const cnt = document.createElement('div');
+  cnt.className = 'state-count';
+  cnt.textContent = total;
+
+  row.appendChild(name);
+  row.appendChild(barWrap);
+  row.appendChild(cnt);
+
+  row.addEventListener('mousemove', e => showTip(e, `<strong>${state}</strong><br>Protests: ${v.Protests}<br>Riots: ${v.Riots}<br>Violence: ${v.Violence}`));
+  row.addEventListener('mouseleave', hideTip);
+  sg.appendChild(row);
+});
+
+// DOT GRID
+const dg = document.getElementById('dot-grid');
+const colMap = {Protests:'#5DCAA5', Riots:'#EF9F27', Violence:'#E24B4A', Other:'#B4B2A9'};
+
+data.events.forEach(ev => {
+  const d = document.createElement('div');
+  d.className = 'dot';
+  d.style.background = colMap[ev.t] || '#B4B2A9';
+  d.addEventListener('mousemove', e => showTip(e, `<strong>${ev.y} · ${ev.s}</strong><br><em>${ev.t}</em><br>${ev.n}`));
+  d.addEventListener('mouseleave', hideTip);
+  dg.appendChild(d);
+});
+</script>
+</body>
+</html>
