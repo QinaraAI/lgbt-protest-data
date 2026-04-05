@@ -1,1 +1,1 @@
-# protest-data
+# lgbt-protest-data
